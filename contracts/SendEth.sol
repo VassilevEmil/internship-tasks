@@ -72,6 +72,10 @@ contract TokenTransfer is Oracle {
         emit TransferSent(msg.sender, _to, _amount);
     }
 
+    function GetBalance() public {
+        return balance;
+    }
+
     
 
 }

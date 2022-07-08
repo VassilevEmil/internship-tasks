@@ -3,7 +3,13 @@ pragma solidity ^0.8.7;
 
 import "@chainlink/contracts/src/v0.8/interfaces/AggregatorV3Interface.sol";
 
-contract PriceConsumerV3 {
+contract Oracle {
+
+    // variable to set the owner
+    address public owner = msg.sender;
+
+    //variable to keep that of balance -- should set and update it somehow
+    uint private balance;
 
     AggregatorV3Interface internal priceFeed;
 

@@ -16,6 +16,17 @@ task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
 /**
  * @type import('hardhat/config').HardhatUserConfig
  */
-module.exports = {
+module.exports = { 
+  
+    networks: {
+      hardhat: {
+      },
+      rinkeby: {
+        url: "https://eth-rinkeby.alchemyapi.io/v2/123abc123abc123abc123abc123abcde",
+        accounts: [privateKey1, privateKey2, ...]
+      }
+    },
   solidity: "0.8.4",
 };
+
+
