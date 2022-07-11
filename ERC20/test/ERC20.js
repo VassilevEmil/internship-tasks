@@ -16,6 +16,11 @@ beforeAll(async () => {
     describe("Setting the constructor", () => {
 
         it("should set msg.sender == owner", () => {
+
+            
+            const owner = Erc20.owner;
+            const msgSender = owner;
+            assert(owner).equal(msgSender)
              
         }),
 
@@ -45,6 +50,17 @@ describe('_burn', function () {
       await expectRevert(this.token.burn(ZERO_ADDRESS, new BN(1)),
         'ERC20: burn from the zero address');
     });
+
+    describe("Transfer()", () => {
+
+      it('emits Transfer event', async function () {
+        const event = expectEvent(
+          this.receipt,
+          'Transfer',
+          { from: ZERO_ADDRESS, to: recipient },
+        );
+
+    })
 
 
 
