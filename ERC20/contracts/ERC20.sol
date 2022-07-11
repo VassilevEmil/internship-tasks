@@ -1,7 +1,11 @@
 pragma solidity ^ 0.8.0;
 
+import "@openzeppelin/contracts/token/ERC20/ERC20.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
 
-contract Token{
+//importing and inheriting ERC20 so we can use its functionalities
+
+contract Token is ERC20, Ownable {
 
     //who owns the contract
     address public owner;
@@ -9,13 +13,13 @@ contract Token{
     //eventually we will need a total supply
     uint256 _totalSupply;
 
+    //variable to keep track of the balance
     uint256 _balances;
 
     //constructor setting the initialsupply and owner
-    constructor (uint256 _initialSupply)  {
+    constructor (uint256 _initialSupply) public {
         owner = msg.sender;
         _initialSupply = 10000000;
-
     
     }
 
@@ -27,6 +31,24 @@ modifier onlyOwner {
     require(msg.sender == owner);
     _;
 }
+
+
+
+function mint(address account, uint256 amount) public onlyOwner{
+    require(owner == msg.sender, "only the owner can mint");
+    _mint();
+
+}
+
+function burn(address account, uint256 amount) public onlyOwner{
+    require(owner == msg.sender, "only owner can burn");
+    _burn();
+}
+
+
+/*
+
+
 
  function _mint(address account, uint256 amount) internal virtual onlyOwner {
         require(account != address(0), "ERC20: mint to the zero address");
@@ -63,7 +85,7 @@ modifier onlyOwner {
 
         emit Transfer(account, address(0), amount);
 
-      
     }
+    */
 
 }

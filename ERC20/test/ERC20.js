@@ -5,7 +5,7 @@ const Erc20 = artifacts.require("ERC20");
 
 contract('ERC20', () => {
 
-    const initialSupply = new BN(100);
+    const initialSupply = new BN(10000000);
 
 })
 
@@ -17,7 +17,6 @@ beforeAll(async () => {
 
         it("should set msg.sender == owner", () => {
 
-            
             const owner = Erc20.owner;
             const msgSender = owner;
             assert(owner).equal(msgSender)
@@ -31,36 +30,6 @@ beforeAll(async () => {
 
     })
 })
-
-
-// saw this from openzeppelin -- ask roskata regarding BN
-
-describe("mint()", () => {
-    const amount = new BN(50);
-    it("rejects a null account", () => {
-        
-        await expectRevert(
-            this.token.mint(ZERO_ADDRESS, amount), 'ERC20: mint to the zero address',
-          );
-    })
-})
-
-describe('_burn', function () {
-    it('rejects a null account', async function () {
-      await expectRevert(this.token.burn(ZERO_ADDRESS, new BN(1)),
-        'ERC20: burn from the zero address');
-    });
-
-    describe("Transfer()", () => {
-
-      it('emits Transfer event', async function () {
-        const event = expectEvent(
-          this.receipt,
-          'Transfer',
-          { from: ZERO_ADDRESS, to: recipient },
-        );
-
-    })
 
 
 
