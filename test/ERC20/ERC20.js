@@ -19,11 +19,12 @@ describe("ERC20", async function () {
     it("should set msg.sender = owner", () => {
       const msgSender = owner;
       assert.equal(owner, msgSender);
-    }),
-      it("should set the initial supply to 10000000", () => {
-        const initialSupply = 10000000;
-        assert.equal(initialSupply, 10000000);
-      });
+    });
+
+    it("should set the initial supply to 10000000", () => {
+      const initialSupply = 10000000;
+      assert.equal(initialSupply, 10000000);
+    });
   });
 });
 
