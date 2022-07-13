@@ -24,11 +24,11 @@ contract Token is ERC20, Ownable {
         _mint(_owner, _initialSupply);
     }
 
-    function mint(address account, uint256 amount) public {
+    function mint(address account, uint256 amount) public onlyOwner {
         _mint(account, amount);
     }
 
-    function burn(address account, uint256 amount) public {
+    function burn(address account, uint256 amount) public onlyOwner {
         _burn(account, amount);
     }
 }
