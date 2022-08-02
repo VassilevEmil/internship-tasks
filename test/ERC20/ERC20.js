@@ -1,23 +1,24 @@
 const { expect, assert } = require("chai");
 const { ethers } = require("hardhat");
-const BN = require("bn.js");
 
 const initialSupply = new BN(10000000);
 let erc20;
+let owner;
+let deployer;
 
 addSnapshotBeforeRestoreAfterEach();
 
 describe("ERC20", async function () {
   beforeEach(async () => {
-    owner = await ethers.getSigners();
-    const erc20Token = await ethers.getContractFactory("Token");
-    erc20 = await erc20Token.deploy();
+    [deployer] = await ethers.getSigners();
+    const erc20Factory = await ethers.getContractFactory("Token");
+    erc20 = await erc20Factory.deploy([deployer]);
     await erc20.deployed();
   });
 
   describe("constructor", () => {
     it("should set msg.sender = owner", () => {
-      const msgSender = owner;
+      owner = erc20.owner();
       assert.equal(owner, msgSender);
     });
 
