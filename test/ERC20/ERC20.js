@@ -1,6 +1,7 @@
 const { expect, assert } = require("chai");
 const { ethers } = require("hardhat");
 const BN = require("bn.js");
+const { base58 } = require("ethers/lib/utils");
 
 //const initialSupply = new BN(10000000);
 //let initialSupply;
@@ -38,6 +39,9 @@ describe("ERC20", async function () {
     it("should check if the totalSupply == initialSupply", async function () {
       let totalSupplyContract = await erc20.totalSupply();
       assert.equal(initialSupply, totalSupplyContract);
+    });
+    it("onlyOwner shoud be able to mint", async function () {
+      expect(await erc20.owner().toBe(deployer.address));
     });
   });
 });
