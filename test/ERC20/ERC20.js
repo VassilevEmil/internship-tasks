@@ -32,7 +32,7 @@ describe("ERC20", async function () {
   describe("constructor", () => {
     it("should set msg.sender = owner", async function () {
       owner = await erc20.owner();
-      //console.log("owner:--------------- ", owner);
+
       assert.equal(owner, deployer.address);
     });
 
@@ -40,10 +40,7 @@ describe("ERC20", async function () {
       let totalSupply = await erc20.balanceOf(owner);
       assert.equal(initialSupply, totalSupply);
     });
-    it("should check if the totalSupply == initialSupply", async function () {
-      let totalSupplyContract = await erc20.totalSupply();
-      assert.equal(initialSupply, totalSupplyContract);
-    });
+
     it("onlyOwner shoud be able to mint, otherwise should be reverted with message", async function () {
       const erc20Custom = await erc20.connect(addr1);
       //console.log("sddhdsfhbf----------------------------", erc20Custom);
