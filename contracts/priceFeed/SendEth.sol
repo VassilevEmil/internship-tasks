@@ -23,6 +23,9 @@ contract TokenTransfer is Oracle {
 
     //saving the latest price in a variable
     uint256 public price = oracleInstance.getLatestPrice();
+    
+    uint256 price = getLatestPrice(); 
+    
 
 
     address public owner;

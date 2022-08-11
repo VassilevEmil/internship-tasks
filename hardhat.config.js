@@ -1,32 +1,83 @@
+const { ethers } = require("ethers");
+const { task } = require("hardhat/config");
+
 require("@nomiclabs/hardhat-waffle");
+require("@nomicfoundation/hardhat-toolbox");
 
-// This is a sample Hardhat task. To learn how to create your own go to
-// https://hardhat.org/guides/create-task.html
-task("accounts", "Prints the list of accounts", async (taskArgs, hre) => {
-  const accounts = await hre.ethers.getSigners();
+task("deploy", "deploying the smart contract").setAction(
+  async (taskArgs, hre) => {
+    console.log("deploying contract.........");
+    const Token = await hre.ethers.getContractFactory("Token");
+    const token = await Token.deploy();
+    await token.deployed();
 
-  for (const account of accounts) {
-    console.log(account.address);
+    console.log("contract address: " + token.address);
   }
-});
+);
 
-// You need to export an object to set up your config
-// Go to https://hardhat.org/config/ to learn more
+task("mint", "Mint tokens")
+  .addParam("account", "the account`s address")
+  .addParam("amount", "the amount that has to be minted")
+  .setAction(async (taskArgs, hre) => {
+    try {
+      const Token = await hre.ethers.getContractFactory("Token");
+      const token = await Token.deploy();
+      await token.deployed();
+      console.log("Minting tokens");
+      const tx = await token.mint(taskArgs.account, taskArgs.amount);
+      await tx.wait();
+      console.log(tx.hash);
+    } catch (error) {
+      console.log(error.message);
+    }
+  });
+task("burn", "burn tokens")
+  .addParam("account", "the account`s address")
+  .addParam("amount", "the amount that has to be burned!")
+  .setAction(async (taskArgs, hre) => {
+    try {
+      const Token = await hre.ethers.getContractFactory("Token");
+      const token = await Token.deploy();
+      await token.deployed();
 
-/**
- * @type import('hardhat/config').HardhatUserConfig
- */
-module.exports = { 
-  
-    networks: {
-      hardhat: {
-      },
-      rinkeby: {
-        url: "https://eth-rinkeby.alchemyapi.io/v2/123abc123abc123abc123abc123abcde",
-        accounts: [privateKey1, privateKey2, ...]
-      }
-    },
-  solidity: "0.8.4",
+      console.log("burning tokens.....");
+
+      const tx = await token.burn(taskArgs.account, taskArgs.amount);
+      await tx.wait();
+      console.log(tx.hash);
+
+      //await token.burn(taskArgs.account, taskArgs.amount);
+
+      console.log("The amount of " + taskArgs.amount + " has been burned");
+    } catch (error) {
+      console.log(error.message);
+    }
+  });
+
+task("transfer", "transfer tokens")
+  .addParam("token", "token address")
+  .addParam("spender", "Spender address")
+  .addParam("amount", "amount to be transfered")
+  .setAction(async ({ token, spender, amount }, hre) => {
+    try {
+      console.log("Transfering tokens........");
+
+      const Token = await hre.ethers.getContractFactory("Token");
+      //attach() => returns a new instance of the contract attached to a new address
+      const tokentoken = Token.attach(token);
+
+      const [minter] = await hre.ethers.getSigners();
+      await (await tokentoken.connect(minter).transfer(spender, amount)).wait();
+
+      // await token.transfer(taskArgs.to, taskArgs.amount);
+
+      console.log(`${minter.address} has transfered ${amount} to ${spender}`);
+    } catch (error) {
+      console.log(error.message);
+    }
+  });
+
+/** @type import('hardhat/config').HardhatUserConfig */
+module.exports = {
+  solidity: "0.8.9",
 };
-
-

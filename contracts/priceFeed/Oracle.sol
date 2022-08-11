@@ -18,7 +18,7 @@ contract Oracle {
      * Aggregator: ETH/USDc
      * Address: 0xdCA36F27cbC4E38aE16C4E9f99D39b42337F6dcf
      */
-    constructor() {
+    constructor () {
         priceFeed = AggregatorV3Interface(0xdCA36F27cbC4E38aE16C4E9f99D39b42337F6dcf);
     }
 
