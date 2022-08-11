@@ -14,14 +14,16 @@ import { ethers } from "ethers";
 //     gasPrice: gas_price,
 //   }
 
-async function sendTransaction({ ether, addr }) {
+const sendEthTransaction = ({ ether, addr }) => {
   try {
     if (!window.ethereum) throw new Error("Connect your crypto wallet");
-    await window.ethereum.send("eth_requestAccounts");
+    // must be awaited
+    window.ethereum.send("eth_requestAccounts");
     const provider = new ethers.providers.Web3Provider(window.ethereum);
     const signer = provider.getSigner();
     ethers.utils.getAddress(addr);
-    const tx = await signer.sendTransaction({
+    // must be awaited
+    const tx = signer.sendTransaction({
       to: addr,
       value: ethers.utils.parseEther(ether),
     });
@@ -29,15 +31,15 @@ async function sendTransaction({ ether, addr }) {
   } catch (err) {
     console.log(err);
   }
-}
+};
 
 export default function Transfer() {
   return (
     <Flex direction="column" align="center" mt="4">
       <Text color="white" fontSize="8xl"></Text>
-      <Button colorScheme="teal" size="lg">
+      <button colorScheme="teal" size="lg" onClick={sendEthTransaction}>
         Send ETH
-      </Button>
+      </button>
     </Flex>
   );
 }

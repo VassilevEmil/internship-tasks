@@ -6,16 +6,12 @@ require("@nomicfoundation/hardhat-toolbox");
 
 task("deploy", "deploying the smart contract").setAction(
   async (taskArgs, hre) => {
-    console.log("");
     console.log("deploying contract.........");
     const Token = await hre.ethers.getContractFactory("Token");
     const token = await Token.deploy();
     await token.deployed();
 
-    console.log("");
-
     console.log("contract address: " + token.address);
-    console.log("");
   }
 );
 
