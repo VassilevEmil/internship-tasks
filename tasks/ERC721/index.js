@@ -34,11 +34,11 @@ task("mint721", "Mint Nfts")
 
 task("burn721", "Burn Nfts")
   .addParam("tokenId", "the unique nft identifier")
+  .addParam("address", "contract`s address")
   .setAction(async (taskArgs, hre) => {
     try {
       const Nft = await hre.ethers.getContractFactory("Nft");
-      const nft = await Nft.deploy();
-      await nft.deployed();
+      const nft = Nft.attach(taskArgs.address);
       console.log("burning nft");
 
       const tx = await nft.burn(taskArgs.tokenId);
