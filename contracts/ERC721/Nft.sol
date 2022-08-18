@@ -9,7 +9,7 @@ import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
 import "@openzeppelin/contracts/token/ERC721/extensions/ERC721URIStorage.sol";
 
-contract Nft is Ownable, ERC721URIStorage {
+contract Nft is Ownable, ERC721 {
     // declare a counter so we can keep track of the total minted tokens
 
     using Counters for Counters.Counter;
@@ -21,7 +21,7 @@ contract Nft is Ownable, ERC721URIStorage {
 
     // minting should only happen if we deposit some money
 
-    function mint(address to, string memory _tokenURI)
+    function mint(address to, string memory tokenURI)
         public
         payable
         returns (uint256)
@@ -34,11 +34,26 @@ contract Nft is Ownable, ERC721URIStorage {
         currentTokenId.increment();
         uint256 newTokenId = currentTokenId.current();
         _mint(to, newTokenId);
-        _setTokenURI(newTokenId, _tokenURI);
         return newTokenId;
     }
 
     function burn(uint256 tokenId) public onlyOwner {
         _burn(tokenId);
+    }
+
+    function baseURI() public pure virtual returns (string memory) {
+        return "ipfs://QmWhGaQQXxyQmnFCgnfhLb8QLWLrqdgViC6F5mXdLCMLqt/";
+    }
+
+    function tokenURI(uint256 _tokenId)
+        public
+        pure
+        override
+        returns (string memory)
+    {
+        return
+            string(
+                abi.encodePacked(baseURI(), Strings.toString(_tokenId), ".json")
+            );
     }
 }

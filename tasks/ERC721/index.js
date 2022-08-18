@@ -1,4 +1,4 @@
-const { ethers } = require("ethers");
+const { ethers, Contract } = require("ethers");
 const { task } = require("hardhat/config");
 
 require("@nomiclabs/hardhat-waffle");
@@ -18,11 +18,11 @@ task("deployERC721", "deploying the smart contract").setAction(
 task("mint721", "Mint Nfts")
   .addParam("to", "to which address the nft should be minted")
   .addParam("tokenuri", "where the nft image has to be hosted")
+  .addParam("address", "Contract`s address")
   .setAction(async (taskArgs, hre) => {
     try {
       const Nft = await hre.ethers.getContractFactory("Nft");
-      const nft = await Nft.deploy();
-      await nft.deployed();
+      const nft = Nft.attach(taskArgs.address);
       console.log("Minting nfts");
       const tx = await nft.mint(taskArgs.to, taskArgs.tokenuri);
       await tx.wait();
