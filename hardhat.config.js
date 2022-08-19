@@ -8,6 +8,7 @@ module.exports = {
   networks: {
     rinkeby: {
       // expose vulnerability, will change it later
+      // proccess.env.name
 
       url: "https://rinkeby.infura.io/v3/7ee27a75ab7d4e0c97303c78358181de",
       accounts: [
