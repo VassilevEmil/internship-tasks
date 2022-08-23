@@ -5,18 +5,23 @@ pragma solidity ^0.8.0;
 // their functionalities
 
 import "@openzeppelin/contracts/token/ERC721/ERC721.sol";
-import "@openzeppelin/contracts/access/Ownable.sol";
 import "@openzeppelin/contracts/utils/Counters.sol";
+import "@openzeppelin/contracts/access/Ownable.sol";
+import "@openzeppelin/contracts/token/ERC721/extensions/ERC721Burnable.sol";
 
-contract Nft is Ownable, ERC721 {
+contract Nft is ERC721, ERC721Burnable, Ownable {
     // declare a counter so we can keep track of the total minted tokens
 
     using Counters for Counters.Counter;
     Counters.Counter private currentTokenId;
 
     uint256 mintFee = 0.2 * 10**18;
+    address public _owner;
 
-    constructor() ERC721("Token", "Tkn") {}
+    constructor() ERC721("Token", "Tkn") {
+        // setting the contract`s owner to be the address that deploys the contract
+        _owner = msg.sender;
+    }
 
     // minting should only happen if we deposit some money
 
@@ -25,10 +30,10 @@ contract Nft is Ownable, ERC721 {
         payable
         returns (uint256)
     {
-        // require(
-        //     msg.value == mintFee,
-        //     "should provide some eth in order to mint"
-        // );
+        require(
+            msg.value == mintFee,
+            "should provide some eth in order to mint"
+        );
 
         currentTokenId.increment();
         uint256 newTokenId = currentTokenId.current();
@@ -36,7 +41,7 @@ contract Nft is Ownable, ERC721 {
         return newTokenId;
     }
 
-    function burn(uint256 tokenId) public onlyOwner {
+    function burn(uint256 tokenId) public virtual override {
         _burn(tokenId);
     }
 
@@ -54,5 +59,11 @@ contract Nft is Ownable, ERC721 {
             string(
                 abi.encodePacked(baseURI(), Strings.toString(_tokenId), ".json")
             );
+    }
+
+    function withdraw(uint256 amount) public onlyOwner {
+        payable(_owner).transfer(amount);
+
+        // payable(_owner).call{value:address(this).balance}("");
     }
 }

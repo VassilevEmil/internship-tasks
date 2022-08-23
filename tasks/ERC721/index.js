@@ -21,10 +21,14 @@ task("mint721", "Mint Nfts")
   .addParam("address", "Contract`s address")
   .setAction(async (taskArgs, hre) => {
     try {
+      // parsing the string into a BigNumber in wei
+
+      let fee = ethers.utils.parseEther("0.2");
+
       const Nft = await hre.ethers.getContractFactory("Nft");
       const nft = Nft.attach(taskArgs.address);
       console.log("Minting nfts");
-      const tx = await nft.mint(taskArgs.to, taskArgs.tokenuri);
+      const tx = await nft.mint(taskArgs.to, taskArgs.tokenuri, { value: fee });
       await tx.wait();
       console.log("transaction hash: " + tx.hash);
     } catch (error) {
