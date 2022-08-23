@@ -47,11 +47,9 @@ describe("ERC721", async function () {
     it("The token owner should be able to burn", async function () {
       const erc721Custom = await erc721.connect(deployer);
       //let id = erc721.
-      expect(
-        // not sure, will leave it for now
-
-        erc721Custom.burn()
-      );
+      await expect(
+        erc721Custom.burn(erc721Custom.address, temp)
+      ).to.be.revertedWith("Only the token owner should be able to burn");
     });
     it(" only owner should be able to withdraw the balance from the contract", async function () {
       const erc20Custom = await erc721.connect(addr1);
