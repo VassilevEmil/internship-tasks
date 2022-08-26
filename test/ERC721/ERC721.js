@@ -57,14 +57,6 @@ describe("ERC721", async function () {
         "ERC721: caller is not token owner nor approved"
       );
     });
-
-    it(" only owner should be able to withdraw the balance from the contract", async function () {
-      const erc20Custom = await erc721.connect(addr1);
-      // owner = await erc721.owner();
-      expect(erc20Custom.functions.withdraw(amount)).to.be.revertedWith(
-        "Only contract owner can withdraw funds"
-      );
-    });
   });
 });
 

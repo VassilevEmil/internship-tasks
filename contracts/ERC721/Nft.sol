@@ -1,5 +1,5 @@
 //SPDX-License-Identifier: MIT
-pragma solidity ^0.8.0;
+pragma solidity 0.8.16;
 
 // importing and inheriting different standarts as to be able to use
 // their functionalities
@@ -22,7 +22,6 @@ contract Nft is ERC721, ERC721Burnable, Ownable {
     }
 
     // minting should only happen if we deposit some money
-
     function mint(address to, string memory tokenURI)
         public
         payable
@@ -53,9 +52,5 @@ contract Nft is ERC721, ERC721Burnable, Ownable {
             string(
                 abi.encodePacked(baseURI(), Strings.toString(_tokenId), ".json")
             );
-    }
-
-    function withdraw(uint256 amount) public onlyOwner {
-        payable(msg.sender).transfer(amount);
     }
 }
