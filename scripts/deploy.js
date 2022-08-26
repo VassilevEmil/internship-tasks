@@ -7,8 +7,6 @@ async function main() {
 
   const Nft = await ethers.getContractFactory("Nft");
   const nft = await Nft.deploy();
-
-  console.log("nft address:", nft.address);
 }
 
 main()

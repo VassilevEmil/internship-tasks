@@ -32,28 +32,22 @@ describe("ERC721", async function () {
 
   describe("Nft contract", () => {
     it("should send some eth in order to mint", async function () {
-      // need to pass the tokenUri from the code
-      const tokenUri = "tokenURI";
-
       // checks if the balances have incresed/decreased
       await expect(
-        await erc721.mint(erc721.address, tokenUri, { value: fee })
+        await erc721.mint(erc721.address, { value: fee })
       ).to.changeEtherBalance(deployer, fee.mul(-1));
     });
 
     // should have a minted token before you burn
     it("The token owner should be able to burn", async function () {
-      const tokenUri = "tokenURI";
-
-      await erc721.mint(deployer.address, tokenUri, { value: fee });
+      await erc721.mint(deployer.address, { value: fee });
 
       expect(await erc721.burn(1));
     });
     it("Should not be burned from unauthorized parties", async function () {
-      const tokenUri = "tokenURI";
-      await erc721.mint(deployer.address, tokenUri, { value: fee });
-      const temp1 = await erc721.connect(addr1);
-      await expect(temp1.burn(1)).to.be.revertedWith(
+      await erc721.mint(deployer.address, { value: fee });
+      const notAutorizedAccount = await erc721.connect(addr1);
+      await expect(notAutorizedAccount.burn(1)).to.be.revertedWith(
         "ERC721: caller is not token owner nor approved"
       );
     });

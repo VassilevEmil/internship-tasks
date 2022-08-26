@@ -17,16 +17,9 @@ contract Nft is ERC721, ERC721Burnable, Ownable {
 
     uint256 mintFee = 0.2 * 10**18;
 
-    constructor() ERC721("Token", "Tkn") {
-        // setting the contract`s owner to be the address that deploys the contract
-    }
+    constructor() ERC721("Token", "Tkn") {}
 
-    // minting should only happen if we deposit some money
-    function mint(address to, string memory tokenURI)
-        public
-        payable
-        returns (uint256)
-    {
+    function mint(address to) public payable returns (uint256) {
         require(
             msg.value == mintFee,
             "should provide some eth in order to mint"
