@@ -17,7 +17,6 @@ task("deployERC721", "deploying the smart contract").setAction(
 
 task("mint721", "Mint Nfts")
   .addParam("to", "to which address the nft should be minted")
-  .addParam("tokenuri", "where the nft image has to be hosted")
   .addParam("address", "Contract`s address")
   .setAction(async (taskArgs, hre) => {
     try {
@@ -28,7 +27,7 @@ task("mint721", "Mint Nfts")
       const Nft = await hre.ethers.getContractFactory("Nft");
       const nft = Nft.attach(taskArgs.address);
       console.log("Minting nfts");
-      const tx = await nft.mint(taskArgs.to, taskArgs.tokenuri, { value: fee });
+      const tx = await nft.mint(taskArgs.to, { value: fee });
       await tx.wait();
       console.log("transaction hash: " + tx.hash);
     } catch (error) {
