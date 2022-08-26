@@ -16,11 +16,9 @@ contract Nft is ERC721, ERC721Burnable, Ownable {
     Counters.Counter private currentTokenId;
 
     uint256 mintFee = 0.2 * 10**18;
-    address public _owner;
 
     constructor() ERC721("Token", "Tkn") {
         // setting the contract`s owner to be the address that deploys the contract
-        _owner = msg.sender;
     }
 
     // minting should only happen if we deposit some money
@@ -41,10 +39,6 @@ contract Nft is ERC721, ERC721Burnable, Ownable {
         return newTokenId;
     }
 
-    function burn(uint256 tokenId) public virtual override {
-        _burn(tokenId);
-    }
-
     function baseURI() public pure virtual returns (string memory) {
         return "ipfs://QmWhGaQQXxyQmnFCgnfhLb8QLWLrqdgViC6F5mXdLCMLqt/";
     }
@@ -62,8 +56,6 @@ contract Nft is ERC721, ERC721Burnable, Ownable {
     }
 
     function withdraw(uint256 amount) public onlyOwner {
-        payable(_owner).transfer(amount);
-
-        // payable(_owner).call{value:address(this).balance}("");
+        payable(msg.sender).transfer(amount);
     }
 }

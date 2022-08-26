@@ -1,22 +1,18 @@
 //import "./tasks/ERC721";
 require("@nomiclabs/hardhat-etherscan");
 require("./tasks");
+const PRIVATE_KEY = process.env.PRIVATE_KEY || "";
 
 /** @type import('hardhat/config').HardhatUserConfig */
 module.exports = {
-  solidity: "0.8.9",
+  solidity: "0.8.16",
   networks: {
     rinkeby: {
-      // expose vulnerability, will change it later
-      // proccess.env.name
-
-      url: "https://rinkeby.infura.io/v3/7ee27a75ab7d4e0c97303c78358181de",
-      accounts: [
-        "aa91cde3ba7f0ea25c98271655989772e64062b96186827139971828a0e9ce6c",
-      ],
+      url: "${process.env.INFURA_PK}",
+      accounts: process.env.PRIVATE_KEY,
     },
   },
   etherscan: {
-    apiKey: "UU2SW7FFNSST6BREZRXV4FSD2TYWIHF1PS",
+    apiKey: process.env.API_KEY,
   },
 };

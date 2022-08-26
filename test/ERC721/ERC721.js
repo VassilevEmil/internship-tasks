@@ -1,15 +1,16 @@
 const { expect, assert } = require("chai");
 const { ethers } = require("hardhat");
 const BN = require("bn.js");
-const { base58 } = require("ethers/lib/utils");
+const { base58, hexStripZeros } = require("ethers/lib/utils");
 
-addSnapshotBeforeRestoreAfterEach();
+//addSnapshotBeforeRestoreAfterEach();
 
 describe("ERC721", async function () {
   let erc721;
   let deployer;
   let erc721Factory;
-  const fee = ethers.utils.parseEther("0.1");
+  const fee = ethers.utils.parseEther("0.2");
+  const id = ethers.utils.parseEther("1");
   let addr1;
   let owner;
 
@@ -23,6 +24,7 @@ describe("ERC721", async function () {
 
   this.beforeAll(async function () {
     [deployer, addr1] = await ethers.getSigners();
+
     erc721Factory = await ethers.getContractFactory("Nft", deployer);
     erc721 = await erc721Factory.deploy();
     await erc721.deployed();
@@ -33,24 +35,29 @@ describe("ERC721", async function () {
       // need to pass the tokenUri from the code
       const tokenUri = "tokenURI";
 
-      const erc721Custom = await erc721.connect(deployer);
-
-      // checks firstly if we are able to mint
-      expect(erc721Custom.functions.mint(erc721Custom.address, tokenUri));
-
-      // checks the balance of the
+      // checks if the balances have incresed/decreased
       await expect(
-        await addr1.sendTransaction({ to: deployer.address, value: fee })
-      ).to.changeEtherBalance(deployer, fee);
+        await erc721.mint(erc721.address, tokenUri, { value: fee })
+      ).to.changeEtherBalance(deployer, fee.mul(-1));
     });
 
+    // should have a minted token before you burn
     it("The token owner should be able to burn", async function () {
-      const erc721Custom = await erc721.connect(deployer);
-      //let id = erc721.
-      await expect(
-        erc721Custom.burn(erc721Custom.address, temp)
-      ).to.be.revertedWith("Only the token owner should be able to burn");
+      const tokenUri = "tokenURI";
+
+      await erc721.mint(deployer.address, tokenUri, { value: fee });
+
+      expect(await erc721.burn(1));
     });
+    it("Should not be burned from unauthorized parties", async function () {
+      const tokenUri = "tokenURI";
+      await erc721.mint(deployer.address, tokenUri, { value: fee });
+      const temp1 = await erc721.connect(addr1);
+      await expect(temp1.burn(1)).to.be.revertedWith(
+        "ERC721: caller is not token owner nor approved"
+      );
+    });
+
     it(" only owner should be able to withdraw the balance from the contract", async function () {
       const erc20Custom = await erc721.connect(addr1);
       // owner = await erc721.owner();
